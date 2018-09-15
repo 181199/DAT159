@@ -1,0 +1,8 @@
+package pullUp;
+
+public class B extends Super {
+	
+	public String function() {
+		return "from B";
+	}
+}

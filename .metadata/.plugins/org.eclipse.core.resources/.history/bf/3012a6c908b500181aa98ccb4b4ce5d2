@@ -1,0 +1,54 @@
+import java.util.Enumeration;
+import java.util.Vector;
+
+public class Customer {
+	private String _name;
+	private Vector _rentals = new Vector();
+
+	public Customer(String name) {
+		_name = name;
+	}
+
+	public String statement() {
+		double totalAmount = 0;
+		int frequentRenterPoints = 0;
+		Enumeration rentals = _rentals.elements();
+		String result = "Rental Record for " + getName() + "\n";
+		while (rentals.hasMoreElements()) {
+			double thisAmount = 0;
+			Rental each = (Rental) rentals.nextElement();
+			// extract variable each.getMovie()
+			Movie movie = each.getMovie();
+
+			// extracted the method dertmineAmount() to the Renal class
+			thisAmount = each.determineAmount();
+			
+			int priceCode = movie.getPriceCode();
+			int daysRented = each.getDaysRented();
+
+			// add frequent renter points
+			frequentRenterPoints = movie.getFrequentRenterPoints(frequentRenterPoints, priceCode, daysRented);
+
+			// show figures for this rental
+			result += "\t" + movie.getTitle() + "\t" + String.valueOf(thisAmount) + "\n";
+			totalAmount += thisAmount;
+		}
+		// put footer lines into it's own method and then returned result += footer lines
+		result += addFooterLines(totalAmount, frequentRenterPoints, result);
+		return result;
+	}
+
+	private String addFooterLines(double totalAmount, int frequentRenterPoints, String result) {
+		// add footer lines
+		return result + "Amount owed is " + String.valueOf(totalAmount) + "\n"
+				+ "You earned " + String.valueOf(frequentRenterPoints) + " frequent renter points";
+	}
+
+	public void addRental(Rental arg) {
+		_rentals.addElement(arg);
+	}
+
+	public String getName() {
+		return _name;
+	}
+}

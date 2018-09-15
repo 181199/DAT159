@@ -1,0 +1,4 @@
+1536590324554	Extract method 'getFrequentRenterPoints'
+1536590471948	Extract method 'addFooterLines'
+1536590998237	Extract method 'printFiguresForRental'
+1536591901151	Move compilation units

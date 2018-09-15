@@ -1,0 +1,3 @@
+1535982567023	Extract local variable 'priceCode'
+1535982574497	Extract local variable 'daysRented'
+1535982592564	Extract method 'determineAmount'
