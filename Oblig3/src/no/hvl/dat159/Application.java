@@ -46,17 +46,14 @@ public class Application {
 				wallet.getAddress());
 
 		// Validate the regular transaction created by the "miner"'s wallet:
-		// - All the content must be valid (not null++)!!!
-		if (!regularSecondBlock.isValid())
-			throw new Exception("Block is not valid.");
-		
+		// - All the content must be valid (not null++)!!!		
 		// - All the inputs are unspent and belongs to the sender
 		// - There are no repeating inputs!!!
 		// - All the outputs must have a value > 0
 		// - The sum of inputs equals the sum of outputs
 		// - The transaction is correctly signed by the sender
 		// - The transaction hash is correct	
-		if(!validation(utxo, miner, regularSecondBlock))
+		if (!regularSecondBlock.isValid(utxo, miner))
 			throw new Exception("Block is not valid.");
 
 		// Update the UTXO-set (both add and remove).
@@ -74,10 +71,7 @@ public class Application {
 
 
 		// Validate the regular transaction ...
-		if (!regularThirdBlock.isValid())
-			throw new Exception("Block is not valid.");
-		
-		if(!validation(utxo, miner, regularThirdBlock))
+		if (!regularThirdBlock.isValid(utxo, miner))
 			throw new Exception("Block is not valid.");
 
 		// Update the UTXO-set ...
@@ -112,52 +106,5 @@ public class Application {
         System.out.println(coinbaseTx.toString());
         System.out.println(transactionTx.toString());
         System.out.println();
-	}
-	
-	public static boolean validation(UTXO utxo, Wallet miner, Transaction transaction) {
-		// - All the inputs are unspent and belongs to the sender
-        for (Input input : transaction.getInputs()) {
-            if (!utxo.getUTXOMap().containsKey(input))
-                return false;
-            if (!utxo.getUTXOMap().get(input).getAddress().equals(miner.getAddress()))
-                return false;
-        }
-
-        // - There are no repeating inputs!!!
-        List<String> prevTxHashes = new ArrayList<>();
-        for (Input input : transaction.getInputs()) {
-            if (prevTxHashes.contains(input.getPrevTxHash()))
-                return false;
-            prevTxHashes.add(input.getPrevTxHash());
-        }
-
-        // - All the outputs must have a value > 0
-        for (Output output : transaction.getOutputs()) {
-            if (output.getValue() <= 0)
-                return false;
-        }
-
-        // - The sum of inputs equals the sum of outputs
-        long inputSum = 0;
-        for (Input input : transaction.getInputs())
-            inputSum += utxo.getUTXOMap().get(input).getValue();
-
-        long outputSum = 0;
-        for (Output output : transaction.getOutputs())
-            outputSum += output.getValue();
-
-        if (inputSum != outputSum)
-            return false;
-
-        // - The transaction is correctly signed by the sender
-        if(!DSAUtil.verifyWithDSA(miner.getPublicKey(), transaction.getMessage(), transaction.getSignature()))
-            return false;
-
-        // - The transaction hash is correct
-        String newTxHash = HashUtil.base64Encode(HashUtil.sha256Hash(transaction.getMessage()));
-        if (!transaction.getTxHash().equals(newTxHash))
-        		return false;
-        
-        return true;
 	}
 }
