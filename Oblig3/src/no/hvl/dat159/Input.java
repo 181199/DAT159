@@ -15,7 +15,7 @@ public class Input {
 	@Override
 	public String toString() {
         //TODO For screen output
-	    return "Previous hash: " + getPrevTxHash() + ", Previous Output Index: " + getPrevOutputIndex();
+		return "Input [prevTxHash = " + prevTxHash + ", prevOutputIndex = " + prevOutputIndex + "]";
 	}
 
 	public String getPrevTxHash() {

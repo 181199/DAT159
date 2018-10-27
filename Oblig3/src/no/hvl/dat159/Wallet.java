@@ -87,7 +87,7 @@ public class Wallet {
 
 	@Override
 	public String toString() {
-		return "Id: " + id + ", Address: " + getAddress() + ", Balance: " + getBalance();
+		return "Wallet [id = " + id + ", address = " + getAddress() + ", balance = " + getBalance() + "]";
 	}
 
 	public long getBalance() {

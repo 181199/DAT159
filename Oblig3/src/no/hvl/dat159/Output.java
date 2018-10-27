@@ -14,7 +14,7 @@ public class Output {
 	@Override
 	public String toString() {
         //TODO For screen output
-        return "Value: " + getValue() + ", Address: " + getAddress();
+		return "Output [value = " + value + ", address = " + address + "]";
 	}
 
 	public long getValue() {

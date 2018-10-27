@@ -18,7 +18,7 @@ public class UTXO {
 	}
 
 	public void addOutputFrom(CoinbaseTx ctx) {
-		map.put(new Input(null, -1), ctx.getOutput());
+		map.put(new Input(ctx.getTxHash(), 0), ctx.getOutput());
 	}
 
 	public void addAndRemoveOutputsFrom(Transaction tx) {

@@ -6,7 +6,7 @@ import java.util.List;
 public class Application {
 
 	private static UTXO utxo = new UTXO();
-	private static int blocknumber = 0;
+	private static int blocknumber = 1;
 
 	public static void main(String[] args) throws Exception {
 
@@ -27,8 +27,8 @@ public class Application {
 		// 0. To get started, we need a few (single address) Wallets. Create 2 wallets.
 		// Think of one of them as the "miner" (the one collecting "block rewards").
 
-		Wallet wallet = new Wallet("Address1", utxo);
-		Wallet miner = new Wallet("Address2", utxo);
+		Wallet wallet = new Wallet("Wallet", utxo);
+		Wallet miner = new Wallet("Miner", utxo);
 
 		// 1. The first "block" (= round of transactions) contains only a coinbase
 		// transaction. Create a coinbase transaction that adds a certain
@@ -36,6 +36,10 @@ public class Application {
 
 		CoinbaseTx firstBlock = new CoinbaseTx("Genesis", 10, miner.getAddress());
 		utxo.addOutputFrom(firstBlock);
+		
+		System.out.println("Block number 1:");
+		System.out.println(firstBlock.toString());
+		System.out.println();
 
 		// 2. The second "block" contains two transactions, the mandatory coinbase
 		// transaction and a regular transaction. The regular transaction shall
@@ -46,20 +50,20 @@ public class Application {
 				wallet.getAddress());
 
 		// Validate the regular transaction created by the "miner"'s wallet:
-		// - All the content must be valid (not null++)!!!		
+		// - All the content must be valid (not null++)!!!
 		// - All the inputs are unspent and belongs to the sender
 		// - There are no repeating inputs!!!
 		// - All the outputs must have a value > 0
 		// - The sum of inputs equals the sum of outputs
 		// - The transaction is correctly signed by the sender
-		// - The transaction hash is correct	
+		// - The transaction hash is correct
 		if (!regularSecondBlock.isValid(utxo, miner))
 			throw new Exception("Block is not valid.");
 
 		// Update the UTXO-set (both add and remove).
 		utxo.addAndRemoveOutputsFrom(regularSecondBlock);
-		
-		print(firstBlock, regularSecondBlock);
+
+		print(secondBlock, regularSecondBlock);
 
 		// 3. Do the same once more. Now, the "miner"'s address should have two or more
 		// unspent outputs (depending on the strategy for choosing inputs) with a
@@ -69,15 +73,14 @@ public class Application {
 		Transaction regularThirdBlock = miner.createTransaction(Math.round(miner.getBalance() * 0.2D),
 				wallet.getAddress());
 
-
 		// Validate the regular transaction ...
 		if (!regularThirdBlock.isValid(utxo, miner))
 			throw new Exception("Block is not valid.");
 
 		// Update the UTXO-set ...
 		utxo.addAndRemoveOutputsFrom(regularThirdBlock);
-		
-		print(firstBlock, regularThirdBlock);
+
+		print(thirdBlock, regularThirdBlock);
 
 		// 4. Make a nice print-out of all that has happened, as well as the end status.
 		//
@@ -93,18 +96,18 @@ public class Application {
 		// End status: the set of unspent outputs
 		// End status: for each of the wallets, print
 		// wallet id, address, balance
-        
-        utxo.printUTXO();
-        System.out.println();
-        System.out.println(wallet.toString());
-        System.out.println(miner.toString());
+
+		utxo.printUTXO();
+		System.out.println();
+		System.out.println(wallet.toString());
+		System.out.println(miner.toString());
 	}
-	
+
 	public static void print(CoinbaseTx coinbaseTx, Transaction transactionTx) {
 		blocknumber++;
 		System.out.println("Block number " + blocknumber + ":");
-        System.out.println(coinbaseTx.toString());
-        System.out.println(transactionTx.toString());
-        System.out.println();
+		System.out.println(coinbaseTx.toString());
+		System.out.println(transactionTx.toString());
+		System.out.println();
 	}
 }
