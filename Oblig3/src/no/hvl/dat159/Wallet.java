@@ -35,7 +35,7 @@ public class Wallet {
 		// 1. Collect all UTXO for this wallet and calculate balance
 		Map<Input, Output> walletOutputs = collectMyUtxo();
 		
-		long balance = calculateBalance(walletOutputs.values());
+		long balance = getBalance();
 
 		// 2. Check if there are sufficient funds --- Exception?
 		if (balance < value)

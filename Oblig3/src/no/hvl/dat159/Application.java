@@ -1,8 +1,5 @@
 package no.hvl.dat159;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Application {
 
 	private static UTXO utxo = new UTXO();
@@ -108,6 +105,5 @@ public class Application {
 		System.out.println("Block number " + blocknumber + ":");
 		System.out.println(coinbaseTx.toString());
 		System.out.println(transactionTx.toString());
-		System.out.println();
 	}
 }
